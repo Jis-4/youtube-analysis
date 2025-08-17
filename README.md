@@ -6,7 +6,7 @@
 - Puppeteer loads the page, attempts playback, saves a thumbnail screenshot
 - Downloads audio with ytdl-core, pipes through ffmpeg to WAV 16kHz mono s16
 - **FREE Transcription**: Uses OpenAI Whisper API (free tier) or generates mock data
-- **FREE AI Detection**: Uses Hugging Face inference API (free tier) or smart heuristics
+- **REAL AI Detection**: Uses Hugging Face models locally (no API keys needed!)
 - Persists data in ./data/{id}/result.json and screenshot at ./data/{id}/screenshot.png
 - GET /result/:id returns JSON
 
@@ -15,14 +15,19 @@
 1. Install Node 18
 2. Copy env.example to .env (API keys are optional - service works without them!)
 3. npm install
-4. Ensure ffmpeg and chromium are installed on your machine
+4. **Download AI Detection Models** (optional but recommended):
+   ```bash
+   node download-models.js
+   ```
+5. Ensure ffmpeg and chromium are installed on your machine
    - Ubuntu: `sudo apt-get install ffmpeg chromium`
    - Windows: Install ffmpeg and add to PATH
    - macOS: `brew install ffmpeg chromium`
-5. Start: `npm start`
-6. Visit: http://localhost:8080
+6. Start: `npm start`
+7. Visit: http://localhost:8080
 
 **🎉 The service now works completely FREE by default!**
+**🤖 AI detection works offline once models are downloaded!**
 
 ## Docker
 
@@ -64,18 +69,23 @@
 
 ### **Free Services Included:**
 - **🎯 Transcription**: OpenAI Whisper API (free tier available)
-- **🤖 AI Detection**: Hugging Face inference API (free tier available)
-- **📱 Mock Data**: Smart fallback when APIs are unavailable
+- **🤖 REAL AI Detection**: Hugging Face models run locally (no API keys!)
+- **📱 Smart Fallbacks**: Multiple models + intelligent heuristics
 
 ### **Optional Premium Upgrades:**
 - **ElevenLabs Scribe**: Better transcription quality (paid)
 - **GPTZero**: Advanced AI detection (paid)
 
-### **How to Get Free API Keys:**
+### **AI Detection Models Used:**
+1. **prasoonmhwr/ai_detection_model** - Probability-based detection (F1 score ~0.907)
+2. **roberta-base-openai-detector** - OpenAI's official AI detector
+3. **Mohinikathro/AI-Content-Detector** - Three-way classification (Human/AI/Paraphrased)
+
+### **How to Get Free API Keys (Optional):**
 1. **OpenAI**: Sign up at [openai.com](https://openai.com) - free tier available
 2. **Hugging Face**: Sign up at [huggingface.co](https://huggingface.co) - free tier available
 
-**The service works perfectly without any API keys!** 🎉
+**🎉 The service works perfectly without any API keys - AI detection runs locally!**
 
 ## Sample JSON Output
 
@@ -123,16 +133,19 @@ youtube-analysis-service/
 │   ├── routes/
 │   │   └── analyze.js         # Analysis endpoint
 │   ├── lib/
-│   │   ├── puppeteerCapture.js    # Screenshot capture
-│   │   ├── downloadAndConvertAudio.js  # Audio processing
-│   │   ├── transcribeElevenLabs.js     # Transcription API
-│   │   └── gptzero.js                 # AI detection API
+│   │   ├── puppeteerCapture.js        # Screenshot capture
+│   │   ├── downloadAndConvertAudio.js # Audio processing
+│   │   ├── transcribeFree.js          # Free transcription (Whisper + mock)
+│   │   ├── aiDetectionReal.js         # REAL AI detection (Hugging Face)
+│   │   ├── transcribeElevenLabs.js    # Premium transcription (paid)
+│   │   └── gptzero.js                 # Premium AI detection (paid)
 │   └── storage.js             # Data persistence
 ├── public/
 │   └── index.html             # Web interface
 ├── data/                      # Generated files (gitignored)
 ├── Dockerfile                 # Container setup
 ├── docker-compose.yml         # Easy deployment
+├── test-free-service.js       # Test script for AI detection
 └── README.md                  # This file
 ```
 

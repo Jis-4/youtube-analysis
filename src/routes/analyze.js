@@ -6,7 +6,7 @@ const fs = require('fs');
 const puppeteerCapture = require('../lib/puppeteerCapture');
 const downloadAndConvertAudio = require('../lib/downloadAndConvertAudio');
 const transcribeFree = require('../lib/transcribeFree');
-const aiDetectionFree = require('../lib/aiDetectionFree');
+const aiDetectionReal = require('../lib/aiDetectionReal');
 const storage = require('../storage');
 
 router.post('/', async (req, res) => {
@@ -34,12 +34,15 @@ router.post('/', async (req, res) => {
       // 3. transcription with FREE service (Whisper or mock)
       const transcription = await transcribeFree(wavPath);
 
-      // 4. for each sentence, run FREE AI detection and append ai_probability
+      // 4. for each sentence, run REAL AI detection using Hugging Face models
       for (let s of transcription.sentences || []) {
-        const analysis = await aiDetectionFree.analyzeText(s.text);
+        const analysis = await aiDetectionReal.analyzeText(s.text);
         s.ai_probability = analysis.ai_probability;
         s.provider = analysis.provider;
-        s.note = analysis.note;
+        s.model = analysis.model;
+        s.confidence = analysis.confidence;
+        if (analysis.note) s.note = analysis.note;
+        if (analysis.analysis) s.heuristics = analysis.analysis;
       }
 
       // 5. persist JSON

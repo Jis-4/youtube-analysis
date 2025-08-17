@@ -1,6 +1,6 @@
-// Test script to demonstrate the FREE YouTube Analysis service
+// Test script to demonstrate the REAL AI Detection YouTube Analysis service
 const transcribeFree = require('./src/lib/transcribeFree');
-const aiDetectionFree = require('./src/lib/aiDetectionFree');
+const aiDetectionReal = require('./src/lib/aiDetectionReal');
 
 async function testFreeService() {
   console.log('🧪 Testing FREE YouTube Analysis Service...\n');
@@ -22,9 +22,9 @@ async function testFreeService() {
 
   console.log('\n');
 
-  // Test 2: Free AI detection (no API key needed)
-  console.log('🤖 Test 2: Free AI Detection Service');
-  console.log('=====================================');
+  // Test 2: REAL AI detection using Hugging Face models
+  console.log('🤖 Test 2: REAL AI Detection Service (Hugging Face)');
+  console.log('====================================================');
   
   const testTexts = [
     "Hello, this is a simple test message.",
@@ -37,10 +37,15 @@ async function testFreeService() {
     console.log(`\n📝 Text ${i + 1}: "${text}"`);
     
     try {
-      const analysis = await aiDetectionFree.analyzeText(text);
+      const analysis = await aiDetectionReal.analyzeText(text);
       console.log(`🎯 AI Probability: ${(analysis.ai_probability * 100).toFixed(1)}%`);
       console.log(`🏷️  Provider: ${analysis.provider}`);
+      if (analysis.model) console.log(`🤖 Model: ${analysis.model}`);
+      if (analysis.confidence) console.log(`📊 Confidence: ${(analysis.confidence * 100).toFixed(1)}%`);
       if (analysis.note) console.log(`📝 Note: ${analysis.note}`);
+      if (analysis.heuristics) {
+        console.log(`🔍 Heuristics: Length=${analysis.heuristics.textLength}, AI Keywords=${analysis.heuristics.aiKeywords}`);
+      }
     } catch (error) {
       console.log('❌ Error:', error.message);
     }
@@ -48,11 +53,12 @@ async function testFreeService() {
 
   console.log('\n🎉 FREE Service Test Complete!');
   console.log('\n💡 Key Benefits:');
-  console.log('   • No API keys required');
-  console.log('   • Works completely offline');
-  console.log('   • Smart fallback mechanisms');
-  console.log('   • Professional mock data generation');
-  console.log('\n🚀 Ready to analyze YouTube videos!');
+  console.log('   • REAL AI detection using Hugging Face models');
+  console.log('   • No API keys required - runs locally');
+  console.log('   • Multiple model fallbacks for reliability');
+  console.log('   • Smart heuristics when models fail');
+  console.log('   • Professional analysis with confidence scores');
+  console.log('\n🚀 Ready to analyze YouTube videos with REAL AI detection!');
 }
 
 // Run the test
