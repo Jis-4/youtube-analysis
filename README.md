@@ -15,19 +15,24 @@
 1. Install Node 18
 2. Copy env.example to .env (API keys are optional - service works without them!)
 3. npm install
-4. **Download AI Detection Models** (optional but recommended):
+4. **Check Browser Availability** (required for screenshots):
+   ```bash
+   node check-browser.js
+   ```
+5. **Download AI Detection Models** (optional but recommended):
    ```bash
    node download-models.js
    ```
-5. Ensure ffmpeg and chromium are installed on your machine
-   - Ubuntu: `sudo apt-get install ffmpeg chromium`
+6. Ensure ffmpeg is installed on your machine
+   - Ubuntu: `sudo apt-get install ffmpeg`
    - Windows: Install ffmpeg and add to PATH
-   - macOS: `brew install ffmpeg chromium`
-6. Start: `npm start`
-7. Visit: http://localhost:8080
+   - macOS: `brew install ffmpeg`
+7. Start: `npm start`
+8. Visit: http://localhost:8080
 
 **🎉 The service now works completely FREE by default!**
 **🤖 AI detection works offline once models are downloaded!**
+**🌐 Browser auto-detection for screenshots!**
 
 ## Docker
 
@@ -115,6 +120,14 @@
 
 ## Troubleshooting
 
+### **Browser Issues (Screenshots)**
+- **"Browser was not found"**: Run `node check-browser.js` to diagnose
+- **Windows**: Install Google Chrome from https://www.google.com/chrome/
+- **macOS**: Install Google Chrome from https://www.google.com/chrome/
+- **Linux**: `sudo apt-get install chromium-browser`
+- **Manual setup**: Set `PUPPETEER_EXECUTABLE` in your .env file
+
+### **Other Issues**
 - **Puppeteer fails in docker**: Ensure chromium path matches `PUPPETEER_EXECUTABLE` in Dockerfile
 - **ffmpeg missing**: Install ffmpeg on your system
 - **Large audio uploads timing out**: Increase axios timeout where required
