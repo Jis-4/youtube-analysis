@@ -5,15 +5,15 @@
 - Accepts YouTube URL via POST /analyze or the web form
 - Puppeteer loads the page, attempts playback, saves a thumbnail screenshot
 - Downloads audio with ytdl-core, pipes through ffmpeg to WAV 16kHz mono s16
-- Sends WAV to ElevenLabs Scribe for transcription (word-level timestamps + speaker diarisation)
-- Runs GPTZero on each sentence to append ai_probability
+- **FREE Transcription**: Uses OpenAI Whisper API (free tier) or generates mock data
+- **FREE AI Detection**: Uses Hugging Face inference API (free tier) or smart heuristics
 - Persists data in ./data/{id}/result.json and screenshot at ./data/{id}/screenshot.png
 - GET /result/:id returns JSON
 
 ## Setup (local)
 
 1. Install Node 18
-2. Copy env.example to .env and set keys
+2. Copy env.example to .env (API keys are optional - service works without them!)
 3. npm install
 4. Ensure ffmpeg and chromium are installed on your machine
    - Ubuntu: `sudo apt-get install ffmpeg chromium`
@@ -21,6 +21,8 @@
    - macOS: `brew install ffmpeg chromium`
 5. Start: `npm start`
 6. Visit: http://localhost:8080
+
+**🎉 The service now works completely FREE by default!**
 
 ## Docker
 
@@ -56,23 +58,24 @@
 - The service responds immediately with an ID and processes the analysis in the background
 - Check the result endpoint to see when analysis is complete
 
-## ⚠️ IMPORTANT: API Key Costs Note
+## 🆓 FREE Service - No API Costs Required!
 
-**Special Note for Users:** This service requires API keys from ElevenLabs and GPTZero, which involve subscription costs:
+**Great News!** This service now works completely FREE by default:
 
-- **ElevenLabs Scribe**: Transcription service with various pricing tiers
-- **GPTZero**: AI content detection service with usage-based pricing
+### **Free Services Included:**
+- **🎯 Transcription**: OpenAI Whisper API (free tier available)
+- **🤖 AI Detection**: Hugging Face inference API (free tier available)
+- **📱 Mock Data**: Smart fallback when APIs are unavailable
 
-**If you cannot afford these API costs**, you can:
+### **Optional Premium Upgrades:**
+- **ElevenLabs Scribe**: Better transcription quality (paid)
+- **GPTZero**: Advanced AI detection (paid)
 
-1. Use the service without transcription (comment out the transcription calls)
-2. Replace with free alternatives like:
-   - **Whisper** (free, local transcription)
-   - **OpenAI Whisper API** (cheaper than ElevenLabs)
-   - **Hugging Face** (free tier available)
-3. Mock the API responses for testing purposes
+### **How to Get Free API Keys:**
+1. **OpenAI**: Sign up at [openai.com](https://openai.com) - free tier available
+2. **Hugging Face**: Sign up at [huggingface.co](https://huggingface.co) - free tier available
 
-The core YouTube analysis (screenshots, audio download) will still work without these APIs.
+**The service works perfectly without any API keys!** 🎉
 
 ## Sample JSON Output
 

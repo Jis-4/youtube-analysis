@@ -5,8 +5,8 @@ const path = require('path');
 const fs = require('fs');
 const puppeteerCapture = require('../lib/puppeteerCapture');
 const downloadAndConvertAudio = require('../lib/downloadAndConvertAudio');
-const transcribeElevenLabs = require('../lib/transcribeElevenLabs');
-const gptzero = require('../lib/gptzero');
+const transcribeFree = require('../lib/transcribeFree');
+const aiDetectionFree = require('../lib/aiDetectionFree');
 const storage = require('../storage');
 
 router.post('/', async (req, res) => {
@@ -31,13 +31,15 @@ router.post('/', async (req, res) => {
       const wavPath = path.join(destDir, 'audio.wav');
       await downloadAndConvertAudio(youtubeUrl, wavPath);
 
-      // 3. transcription with ElevenLabs Scribe
-      const transcription = await transcribeElevenLabs(wavPath);
+      // 3. transcription with FREE service (Whisper or mock)
+      const transcription = await transcribeFree(wavPath);
 
-      // 4. for each sentence, run GPTZero and append ai_probability
+      // 4. for each sentence, run FREE AI detection and append ai_probability
       for (let s of transcription.sentences || []) {
-        const analysis = await gptzero.analyzeText(s.text);
+        const analysis = await aiDetectionFree.analyzeText(s.text);
         s.ai_probability = analysis.ai_probability;
+        s.provider = analysis.provider;
+        s.note = analysis.note;
       }
 
       // 5. persist JSON
